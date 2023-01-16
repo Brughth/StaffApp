@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:scroll_date_picker/scroll_date_picker.dart';
 import 'package:staff_app/person/data/models/person_model.dart';
 import 'package:staff_app/person/data/repositories/person_repository.dart';
 import 'package:staff_app/person/presentation/crop_image_screen.dart';
@@ -46,6 +47,8 @@ class _AddOrUpdatePersonScreenState extends State<AddOrUpdatePersonScreen>
   MemoryImage? _image;
   late DateTime? __dateOfBirth;
   bool isLoading = false;
+
+  DateTime selectedDate = DateTime(2015);
 
   late String? _remoteImage;
 
@@ -317,7 +320,8 @@ class _AddOrUpdatePersonScreenState extends State<AddOrUpdatePersonScreen>
                 FadeIn(
                   child: AppInput(
                     onTap: () {
-                      showDateRangePickerDialog();
+                      //showDateRangePickerDialog();
+                      showDatePickerDialog();
                     },
                     required: true,
                     validators: [
@@ -396,7 +400,7 @@ class _AddOrUpdatePersonScreenState extends State<AddOrUpdatePersonScreen>
         "lastName": _subnameController.text,
         "email": _emailController.text,
         "phone": _phoneController.text,
-        "dateOfBirth": __dateOfBirth!.toUtc().toIso8601String(),
+        "dateOfBirth": selectedDate.toUtc().toIso8601String(),
         "image": imageUrl,
       };
 
@@ -462,7 +466,7 @@ class _AddOrUpdatePersonScreenState extends State<AddOrUpdatePersonScreen>
           "lastName": _subnameController.text,
           "email": _emailController.text,
           "phone": _phoneController.text,
-          "dateOfBirth": __dateOfBirth!.toUtc().toIso8601String(),
+          "dateOfBirth": selectedDate.toUtc().toIso8601String(),
           "image": imageUrl,
         };
 
@@ -505,14 +509,14 @@ class _AddOrUpdatePersonScreenState extends State<AddOrUpdatePersonScreen>
     }
   }
 
-  showDateRangePickerDialog() {
-    showGeneralDialog(
+  showDatePickerDialog() {
+    return showGeneralDialog(
       barrierLabel: "Date",
       barrierDismissible: true,
       barrierColor: Colors.black.withOpacity(0.5),
       transitionDuration: const Duration(milliseconds: 500),
       context: context,
-      pageBuilder: (context, anim1, anim2) {
+      pageBuilder: (context, animation, secondaryAnimation) {
         return Align(
           alignment: Alignment.center,
           child: Container(
@@ -528,32 +532,36 @@ class _AddOrUpdatePersonScreenState extends State<AddOrUpdatePersonScreen>
             ),
             child: Material(
               color: AppColors.white,
-              child: SfDateRangePicker(
-                maxDate: DateTime.now(),
-                selectionMode: DateRangePickerSelectionMode.single,
-                showActionButtons: true,
-                cancelText: "Annuler",
-                onSubmit: (value) {
-                  setState(
-                    () {
-                      if (value is DateTime) {
-                        __dateOfBirth = value;
-                        _dateOfBirthCotroller.text =
-                            DateFormat.yMd().format(__dateOfBirth!);
-                        Navigator.pop(context);
-                      } else {
-                        AppSnackBar.showError(
-                          message:
-                              "Veuillez sélectionner votre dates de naissance",
-                          context: context,
-                        );
-                      }
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ScrollDatePicker(
+                      selectedDate: selectedDate,
+                      onDateTimeChanged: (value) {
+                        setState(() {
+                          selectedDate = value;
+                          _dateOfBirthCotroller.text =
+                              DateFormat.yMd().format(selectedDate);
+                        });
+                      },
+                      maximumDate: DateTime.now(),
+                    ),
+                  ),
+                  AppButton(
+                    bgColor: AppColors.lightGreen,
+                    onPressed: () {
+                      Navigator.pop(context);
                     },
-                  );
-                },
-                onCancel: () {
-                  Navigator.pop(context);
-                },
+                    child: const Text(
+                      "Ok",
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
           ),
@@ -570,6 +578,72 @@ class _AddOrUpdatePersonScreenState extends State<AddOrUpdatePersonScreen>
       },
     );
   }
+
+  // showDateRangePickerDialog() {
+  //   showGeneralDialog(
+  //     barrierLabel: "Date",
+  //     barrierDismissible: true,
+  //     barrierColor: Colors.black.withOpacity(0.5),
+  //     transitionDuration: const Duration(milliseconds: 500),
+  //     context: context,
+  //     pageBuilder: (context, anim1, anim2) {
+  //       return Align(
+  //         alignment: Alignment.center,
+  //         child: Container(
+  //           height: 350,
+  //           width: 320,
+  //           padding: const EdgeInsets.symmetric(
+  //             vertical: 20,
+  //             horizontal: 20,
+  //           ),
+  //           decoration: BoxDecoration(
+  //             color: Colors.white,
+  //             borderRadius: BorderRadius.circular(10),
+  //           ),
+  //           child: Material(
+  //             color: AppColors.white,
+  //             child: SfDateRangePicker(
+  //               maxDate: DateTime.now(),
+  //               selectionMode: DateRangePickerSelectionMode.single,
+  //               showActionButtons: true,
+  //               cancelText: "Annuler",
+  //               onSubmit: (value) {
+  //                 setState(
+  //                   () {
+  //                     if (value is DateTime) {
+  //                       __dateOfBirth = value;
+  //                       _dateOfBirthCotroller.text =
+  //                           DateFormat.yMd().format(__dateOfBirth!);
+  //                       Navigator.pop(context);
+  //                     } else {
+  //                       AppSnackBar.showError(
+  //                         message:
+  //                             "Veuillez sélectionner votre dates de naissance",
+  //                         context: context,
+  //                       );
+  //                     }
+  //                   },
+  //                 );
+  //               },
+  //               onCancel: () {
+  //                 Navigator.pop(context);
+  //               },
+  //             ),
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //     transitionBuilder: (context, anim1, anim2, child) {
+  //       return SlideTransition(
+  //         position: Tween(
+  //           begin: const Offset(0, 1),
+  //           end: const Offset(0, 0),
+  //         ).animate(anim1),
+  //         child: child,
+  //       );
+  //     },
+  //   );
+  // }
 
   _showPicProfilImageBottonSheet() async {
     showModalBottomSheet(

@@ -49,6 +49,8 @@ dependencies:
   firebase_storage: ^11.0.10
   custom_image_crop: ^0.0.4
   cached_network_image: ^3.2.3
+  scroll_date_picker: ^3.6.1
+  url_launcher: ^6.1.7
 
 dev_dependencies:
   flutter_test:

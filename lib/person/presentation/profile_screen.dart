@@ -6,6 +6,7 @@ import 'package:staff_app/person/data/models/person_model.dart';
 import 'package:staff_app/shared/screens/image_screen.dart';
 import 'package:staff_app/shared/theming/app_colors.dart';
 import 'package:staff_app/shared/utils/app_routes.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfilScreen extends StatefulWidget {
   final PersonModel person;
@@ -29,10 +30,10 @@ class _ProfilScreenState extends State<ProfilScreen> {
         physics: const BouncingScrollPhysics(),
         children: [
           Center(
-            child: CircleAvatar(
-              radius: 90,
-              child: Hero(
-                tag: widget.person.id,
+            child: Hero(
+              tag: widget.person.id,
+              child: CircleAvatar(
+                radius: 90,
                 child: GestureDetector(
                   onTap: () {
                     navigateTo(context, ImageScreen(person: widget.person));
@@ -78,6 +79,9 @@ class _ProfilScreenState extends State<ProfilScreen> {
                 color: AppColors.textColor,
               ),
             ),
+            onTap: () {
+              _openEmailApp(widget.person.email);
+            },
           ),
           ListTile(
             title: const Text(
@@ -96,6 +100,9 @@ class _ProfilScreenState extends State<ProfilScreen> {
                 color: AppColors.textColor,
               ),
             ),
+            onTap: () {
+              _makePhoneCall(widget.person.phone);
+            },
           ),
           ListTile(
             title: const Text(
@@ -119,47 +126,20 @@ class _ProfilScreenState extends State<ProfilScreen> {
       ),
     );
   }
-}
 
-class MenuButton extends StatelessWidget {
-  const MenuButton({
-    Key? key,
-    required this.value,
-    required this.text,
-    required this.onTap,
-  }) : super(key: key);
-  final String value;
-  final String text;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialButton(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      onPressed: onTap,
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            value,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              color: AppColors.textColor,
-              fontSize: 20,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            text,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
     );
+    await launchUrl(launchUri);
+  }
+
+  _openEmailApp(String email) async {
+    final Uri launchUri = Uri(
+      scheme: 'mailto',
+      path: email,
+    );
+    await launchUrl(launchUri);
   }
 }
