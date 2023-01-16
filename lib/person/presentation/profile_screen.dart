@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:staff_app/person/data/models/person_model.dart';
+import 'package:staff_app/shared/screens/image_screen.dart';
 import 'package:staff_app/shared/theming/app_colors.dart';
+import 'package:staff_app/shared/utils/app_routes.dart';
 
 class ProfilScreen extends StatefulWidget {
   final PersonModel person;
@@ -31,10 +33,15 @@ class _ProfilScreenState extends State<ProfilScreen> {
               radius: 90,
               child: Hero(
                 tag: widget.person.id,
-                child: CircleAvatar(
-                  radius: 89,
-                  backgroundImage: CachedNetworkImageProvider(
-                    widget.person.image,
+                child: GestureDetector(
+                  onTap: () {
+                    navigateTo(context, ImageScreen(person: widget.person));
+                  },
+                  child: CircleAvatar(
+                    radius: 89,
+                    backgroundImage: CachedNetworkImageProvider(
+                      widget.person.image,
+                    ),
                   ),
                 ),
               ),
