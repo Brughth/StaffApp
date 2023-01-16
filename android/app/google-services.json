@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "974893836692",
+    "project_id": "staff-app-e7e61",
+    "storage_bucket": "staff-app-e7e61.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:974893836692:android:61c05eaef996b7c61f0781",
+        "android_client_info": {
+          "package_name": "com.example.staff_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "974893836692-bmh5fq3t8h9vas1l0guk67u3hi7bbo41.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmKkLDrRpEieE3wLkVq6wN_04VrdZ7Lt8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "974893836692-bmh5fq3t8h9vas1l0guk67u3hi7bbo41.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

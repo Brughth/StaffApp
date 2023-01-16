@@ -1,6 +1,19 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:staff_app/person/data/models/person_model.dart';
+import 'package:staff_app/person/data/repositories/person_repository.dart';
+import 'package:staff_app/person/presentation/add_or_update_person.dart';
+import 'package:staff_app/person/presentation/profile_screen.dart';
+import 'package:staff_app/shared/screens/image_screen.dart';
 import 'package:staff_app/shared/theming/app_colors.dart';
+import 'package:staff_app/shared/utils/app_routes.dart';
+import 'package:staff_app/shared/utils/const.dart';
+import 'package:staff_app/shared/widgets/app_button.dart';
+import 'package:staff_app/shared/widgets/model_bottom.dart';
+import 'package:staff_app/shared/widgets/person_widget.dart';
 
 class ApplicationPage extends StatefulWidget {
   const ApplicationPage({super.key});
@@ -12,6 +25,9 @@ class ApplicationPage extends StatefulWidget {
 class _ApplicationPageState extends State<ApplicationPage>
     with SingleTickerProviderStateMixin {
   late AnimationController transitionAnimationController;
+  late Stream<QuerySnapshot<Map<String, dynamic>>> _peopleCollection;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late PersonRepository _personRepository;
   @override
   void initState() {
     transitionAnimationController = BottomSheet.createAnimationController(this);
@@ -19,6 +35,8 @@ class _ApplicationPageState extends State<ApplicationPage>
     transitionAnimationController.reverseDuration =
         const Duration(milliseconds: 500);
     transitionAnimationController.drive(CurveTween(curve: Curves.easeIn));
+    _peopleCollection = _firestore.collection(peopleCollection).snapshots();
+    _personRepository = PersonRepository();
     super.initState();
   }
 
@@ -28,7 +46,9 @@ class _ApplicationPageState extends State<ApplicationPage>
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          navigateTo(context, const AddOrUpdatePersonScreen());
+        },
         icon: const Icon(
           Icons.add,
           color: AppColors.white,
@@ -42,147 +62,90 @@ class _ApplicationPageState extends State<ApplicationPage>
           ),
         ),
       ),
-      body: SizedBox(
-        height: screenHeight,
-        width: screenWidth,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).padding.top + 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Liste des personnes",
-                    style: TextStyle(
-                      color: AppColors.black,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 22,
-                    ),
-                  ),
-                  SvgPicture.asset(
-                    'assets/icons/person.svg',
-                    color: AppColors.lightGreen,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(context).copyWith(
-                      // scrollbars: false,
-                      // overscroll: false,
+      appBar: AppBar(
+        title: const Text(
+          "Liste des personnes",
+          style: TextStyle(
+            color: AppColors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 5, right: 10),
+        child: ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(
+            scrollbars: false,
+            overscroll: false,
+          ),
+          child: RefreshIndicator(
+            onRefresh: () async {
+              return;
+            },
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: _peopleCollection,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                        snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CupertinoActivityIndicator(
+                        radius: 16,
+                        color: AppColors.lightGreen,
                       ),
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      return;
-                    },
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      children: [
-                        for (int i = 1; i <= 10; i++) ...[
-                          Container(
-                            height: 70,
-                            width: double.infinity,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: InkWell(
-                                    customBorder: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                    onTap: () {},
-                                    child: Row(
-                                      children: [
-                                        const CircleAvatar(
-                                          radius: 35,
-                                          child: CircleAvatar(
-                                            radius: 34,
-                                            backgroundColor:
-                                                AppColors.blackBlue,
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: 15,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 6),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: const [
-                                              Text(
-                                                "Olice SONA",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: AppColors.black,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              Text(
-                                                "brughthsona@gmail.com",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: AppColors.textColor,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              Text(
-                                                "22 Ans",
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  color: AppColors.black,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    showActionBottomSheet();
-                                  },
-                                  child: const Icon(
-                                    Icons.more_vert,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Divider()
-                        ],
-                        const SizedBox(height: 50),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return const Center(
+                      child: Text("Une erreur inconnue s'est produite"),
+                    );
+                  }
+
+                  if (snapshot.hasData) {
+                    var docs = snapshot.data!.docs;
+
+                    if (docs.isEmpty) {
+                      return const Center(
+                        child: Text("Vide"),
+                      );
+                    }
+
+                    return ListView.separated(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      itemCount: docs.length,
+                      itemBuilder: (context, index) {
+                        var item = docs[index].data();
+                        item['id'] = docs[index].id;
+
+                        PersonModel person = PersonModel.fromJson(item);
+                        return PersonWidget(
+                          person: person,
+                          onTap: () {
+                            navigateTo(context, ProfilScreen(person: person));
+                          },
+                          onMoreTap: () {
+                            showActionBottomSheet(person);
+                          },
+                          onImageTap: () {
+                            navigateTo(context, ImageScreen(person: person));
+                          },
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const Divider();
+                      },
+                    );
+                  }
+                  return Container();
+                }),
           ),
         ),
       ),
     );
   }
 
-  showActionBottomSheet() {
+  showActionBottomSheet(PersonModel person) {
     showModalBottomSheet(
       context: context,
       transitionAnimationController: transitionAnimationController,
@@ -214,53 +177,129 @@ class _ApplicationPageState extends State<ApplicationPage>
                   ),
                 ),
               ),
-              InkWell(
-                onTap: () {},
-                customBorder: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.lightGreen.withOpacity(.1),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 17,
-                          horizontal: 17,
-                        ),
-                        child: Icon(
-                          Icons.edit,
-                          size: 20,
-                          color: AppColors.lightGreen,
-                        ),
-                      ),
+              ModelBotton(
+                color: const Color(0xFF02C508),
+                svgPath: "assets/icons/pen_edite.svg",
+                text: "Modifier",
+                onTap: () async {
+                  Navigator.pop(context);
+                  navigateTo(
+                    context,
+                    AddOrUpdatePersonScreen(
+                      person: person,
                     ),
-                    const SizedBox(width: 25),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Modifier",
-                          style: TextStyle(
-                            color: AppColors.blackText,
-                            fontSize: 17,
-                          ),
-                        ),
-                        Icon(
-                          Icons.navigate_next,
-                          size: 20,
-                          color: AppColors.black,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              )
+                  );
+                },
+              ),
+              const SizedBox(height: 10),
+              ModelBotton(
+                color: AppColors.red,
+                svgPath: "assets/icons/delete.svg",
+                sizeW: 16,
+                sizeH: 16,
+                text: "Supprimer",
+                onTap: () async {
+                  Navigator.pop(context);
+                  showDeletePersoneDialgue(person);
+                },
+              ),
+              const SizedBox(height: 10),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  showDeletePersoneDialgue(PersonModel person) {
+    showGeneralDialog(
+      barrierLabel: "Supprimer",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 500),
+      context: context,
+      pageBuilder: (context, anim1, anim2) {
+        return Align(
+          alignment: Alignment.center,
+          child: Container(
+            height: 300,
+            width: 300,
+            padding: const EdgeInsets.symmetric(
+              vertical: 20,
+              horizontal: 20,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Material(
+              color: AppColors.white,
+              child: Column(
+                children: [
+                  Text(
+                    "Supprimer ${person.firstName} !!!",
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const Spacer(),
+                  const Spacer(),
+                  const Text.rich(
+                    TextSpan(
+                      text: "Voulez‑vous vraiment supprimer ? ",
+                    ),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                  const Spacer(),
+                  const Spacer(),
+                  AppButton(
+                    onPressed: () async {
+                      await _personRepository.deletePerson(person.id);
+                      Navigator.pop(context);
+                    },
+                    bgColor: const Color.fromRGBO(35, 204, 183, 1),
+                    child: const Text(
+                      "Oui",
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  AppButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    borderColor: AppColors.bordeColor,
+                    child: const Text(
+                      "Non",
+                      style: TextStyle(
+                        color: AppColors.blackBlue,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+          position: Tween(
+            begin: const Offset(0, 1),
+            end: const Offset(0, 0),
+          ).animate(anim1),
+          child: child,
         );
       },
     );

@@ -1,0 +1,25 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="48" height="48" fill="url(#pattern0)"/>
+<rect x="19" y="12" width="10" height="24" rx="5" stroke="#141414" stroke-width="2"/>
+<mask id="mask0_431_5479" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="8" y="8" width="32" height="32">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M40 8H8V40H40V8ZM24 11C20.6863 11 18 13.6863 18 17V18C18 21.3137 20.6863 24 24 24C27.3137 24 30 21.3137 30 18V17C30 13.6863 27.3137 11 24 11Z" fill="#C4C4C4"/>
+</mask>
+<g mask="url(#mask0_431_5479)">
+<path opacity="0.5" d="M31.507 19.5C32.5305 20.0909 33.3424 20.7925 33.8964 21.5646C34.4503 22.3367 34.7354 23.1643 34.7354 24C34.7354 24.8357 34.4503 25.6633 33.8964 26.4354C33.3424 27.2075 32.5305 27.9091 31.507 28.5" stroke="#141414" stroke-linecap="round"/>
+<path opacity="0.5" d="M31.507 19.5C33.1529 20.4503 34.2356 21.6771 34.5997 23.0045C34.9639 24.3318 34.5908 25.6917 33.534 26.8892" stroke="#141414" stroke-linecap="round"/>
+<path opacity="0.5" d="M31.507 19.5C32.737 20.2101 33.6584 21.0783 34.1959 22.0334C34.7335 22.9886 34.8718 24.0036 34.5997 24.9955" stroke="#141414" stroke-linecap="round"/>
+<path d="M31.507 19.5C33.1529 20.4503 34.2356 21.6771 34.5997 23.0045" stroke="#141414" stroke-linecap="round"/>
+<path d="M26.3108 16.5L34.5069 17.7679L28.5069 21.2321L26.3108 16.5Z" fill="#141414"/>
+<path opacity="0.5" d="M15.9186 28.5C14.895 27.9091 14.0831 27.2075 13.5292 26.4354C12.9752 25.6633 12.6901 24.8357 12.6901 24C12.6901 23.1643 12.9752 22.3367 13.5292 21.5646C14.0831 20.7925 14.895 20.0909 15.9186 19.5" stroke="#141414" stroke-linecap="round"/>
+<path opacity="0.5" d="M15.9186 28.5C14.2726 27.5497 13.19 26.3229 12.8258 24.9955C12.4617 23.6682 12.8347 22.3083 13.8915 21.1108" stroke="#141414" stroke-linecap="round"/>
+<path opacity="0.5" d="M15.9186 28.5C14.6886 27.7899 13.7671 26.9217 13.2296 25.9666C12.6921 25.0114 12.5537 23.9964 12.8258 23.0045" stroke="#141414" stroke-linecap="round"/>
+<path d="M15.9186 28.5C14.2726 27.5497 13.19 26.3229 12.8258 24.9955" stroke="#141414" stroke-linecap="round"/>
+<path d="M21.1148 31.5L12.9186 30.2321L18.9186 26.7679L21.1148 31.5Z" fill="#141414"/>
+</g>
+<defs>
+<pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_431_5479"/>
+</pattern>
+<image id="image0_431_5479" width="1" height="1" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAQSURBVHgBAQUA+v8AAAAAAAAFAAFkeJU4AAAAAElFTkSuQmCC"/>
+</defs>
+</svg>

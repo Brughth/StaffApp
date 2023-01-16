@@ -65,7 +65,7 @@ class AppSnackBar {
       margin: const EdgeInsets.all(20),
       borderRadius: BorderRadius.circular(8),
       flushbarPosition: FlushbarPosition.TOP,
-      icon: Image.asset("assets/images/smill.png"),
+      icon: Image.asset("assets/icons/smill.png"),
       backgroundColor: AppColors.black,
       duration: duration,
     );
